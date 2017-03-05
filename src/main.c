@@ -67,7 +67,7 @@ int main()
 	char batt_avg_ttl[7];
 	char pressure[5];
 
-	uint8_t last_reset_by_watchdog = watchdog_init(2000);
+	uint8_t last_reset_by_watchdog = 0; //watchdog_init(2000);
 
 	usart_init();
 

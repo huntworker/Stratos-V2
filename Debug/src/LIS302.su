@@ -1,0 +1,2 @@
+LIS302.c:7:6:LIS302_Init	8	static
+LIS302.c:21:6:LIS302_GetAcc	16	static

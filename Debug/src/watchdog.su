@@ -1,0 +1,2 @@
+watchdog.c:5:9:watchdog_init	16	static
+watchdog.c:33:6:watchdog_trigger	0	static

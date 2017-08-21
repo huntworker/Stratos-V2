@@ -1,0 +1,3 @@
+ADC.c:6:6:my_ADC_Init	64	static
+ADC.c:54:10:UB_ADC1_SINGLE_Read	8	static
+ADC.c:42:10:UB_ADC1_AV_Read	24	static

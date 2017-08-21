@@ -1,0 +1,7 @@
+stm32_ub_usbdisk.c:27:6:UB_USBDisk_Init	0	static
+stm32_ub_usbdisk.c:39:9:UB_USBDrive_CheckMedia	0	static
+stm32_ub_usbdisk.c:52:5:USB_disk_initialize	0	static
+stm32_ub_usbdisk.c:66:5:USB_disk_status	0	static
+stm32_ub_usbdisk.c:80:5:USB_disk_read	0	static
+stm32_ub_usbdisk.c:94:5:USB_disk_write	0	static
+stm32_ub_usbdisk.c:108:5:USB_disk_ioctl	0	static

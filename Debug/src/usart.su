@@ -1,0 +1,4 @@
+usart.c:7:6:usart_init	40	static
+usart.c:48:6:usart_send_char	8	static
+usart.c:55:6:usart_send_string	8	static
+usart.c:64:6:USART1_IRQHandler	8	static

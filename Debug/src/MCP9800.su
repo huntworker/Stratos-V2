@@ -1,0 +1,2 @@
+MCP9800.c:4:6:MCP_9800_init	0	static
+MCP9800.c:9:9:MCP9800_get_tmp	16	static

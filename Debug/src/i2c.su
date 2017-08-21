@@ -1,0 +1,9 @@
+i2c.c:11:6:i2c_init_tmp	48	static
+i2c.c:752:6:UB_I2C_Delay	8	static
+i2c.c:764:6:P_I2C_timeout	8	static
+i2c.c:51:10:UB_I2C_Read	24	static
+i2c.c:143:10:UB_I2C_ReadByte	24	static
+i2c.c:290:10:UB_I2C_ReadWord	24	static
+i2c.c:447:10:UB_I2C_Read24b	24	static
+i2c.c:560:9:UB_I2C_WriteByte	32	static
+i2c.c:667:9:UB_I2C_WriteCommand	24	static

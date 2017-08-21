@@ -1,0 +1,4 @@
+heating.c:33:6:heating_enable	0	static
+heating.c:38:6:heating_disable	0	static
+heating.c:18:6:heating_init	16	static
+heating.c:43:6:heating	8	static

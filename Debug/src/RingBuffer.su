@@ -1,0 +1,4 @@
+RingBuffer.c:14:6:InitRingBuffer	0	static
+RingBuffer.c:20:19:RingBufferRead	0	static
+RingBuffer.c:32:19:RingBufferWrite	0	static
+RingBuffer.c:45:10:GetRingBufferCurrentFillState	0	static

@@ -1,0 +1,2 @@
+spi.c:8:6:my_SPI_Init	56	static
+spi.c:49:9:SPI_RxTx	16	static

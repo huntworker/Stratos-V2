@@ -1,7 +1,6 @@
-main.c:346:5:SD_add_string.part.0	568	static
-main.c:323:6:SysTick_Handler	0	static
-main.c:331:6:Default_Handler	0	static
-main.c:336:6:HardFault_Handler	0	static
-main.c:341:6:RTC_Alarm_IRQHandler	0	static
-main.c:346:5:SD_add_string	8	static
-main.c:58:5:main	384	static
+main.c:347:6:SysTick_Handler	0	static
+main.c:355:6:Default_Handler	0	static
+main.c:360:6:HardFault_Handler	0	static
+main.c:365:6:RTC_Alarm_IRQHandler	0	static
+main.c:370:5:SD_add_string	560	static
+main.c:61:5:main	392	static

@@ -1,6 +1,6 @@
 stm32f2xx_spi.c:176:6:SPI_I2S_DeInit	8	static
-stm32f2xx_spi.c:215:6:SPI_Init	8	static
-stm32f2xx_spi.c:279:6:I2S_Init	20	static
+stm32f2xx_spi.c:215:6:SPI_Init	24	static
+stm32f2xx_spi.c:279:6:I2S_Init	16	static
 stm32f2xx_spi.c:411:6:SPI_StructInit	0	static
 stm32f2xx_spi.c:439:6:I2S_StructInit	0	static
 stm32f2xx_spi.c:468:6:SPI_Cmd	0	static
@@ -20,5 +20,5 @@ stm32f2xx_spi.c:878:6:SPI_I2S_DMACmd	0	static
 stm32f2xx_spi.c:987:6:SPI_I2S_ITConfig	0	static
 stm32f2xx_spi.c:1031:12:SPI_I2S_GetFlagStatus	0	static
 stm32f2xx_spi.c:1072:6:SPI_I2S_ClearFlag	0	static
-stm32f2xx_spi.c:1097:10:SPI_I2S_GetITStatus	8	static
+stm32f2xx_spi.c:1097:10:SPI_I2S_GetITStatus	4	static
 stm32f2xx_spi.c:1152:6:SPI_I2S_ClearITPendingBit	0	static

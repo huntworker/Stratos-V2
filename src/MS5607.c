@@ -15,9 +15,14 @@ static /*const*/ uint32_t calibration[7] =
     0x6A93*/
 };
 
+void MS5607_get_cal(uint32_t* data)
+{
+	for (uint8_t i = 0; i < 7; i++)
+		data[i] = calibration[i];
+}
+
 
 // dynamisches auslesen der Kalibrierwerte
-// wird hier nicht verwendet
 void MS5607_init(void)
 {
 

@@ -27,4 +27,4 @@ stm32f2xx_flash.c:577:14:FLASH_ProgramByte	16	static
 stm32f2xx_flash.c:693:6:FLASH_OB_WRPConfig	16	static
 stm32f2xx_flash.c:728:6:FLASH_OB_RDPConfig	8	static
 stm32f2xx_flash.c:760:6:FLASH_OB_UserConfig	16	static
-stm32f2xx_flash.c:810:14:FLASH_OB_Launch	0	static
+stm32f2xx_flash.c:810:14:FLASH_OB_Launch	8	static

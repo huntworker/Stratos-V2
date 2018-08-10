@@ -5,20 +5,26 @@
 #include "position.h"
 #include "stm32f2xx_conf.h"
 #include "misc.h"
+#include "main.h"
+#include "commands.h"
+#include "AF.h"
 
 
 #include <string.h>
+#include <stdio.h>
 
 // UART1, 38.400, UB+NMEA
 uint8_t const GPS_MSG_SETBAUD[] = {0xB5, 0x62, 0x06, 0x00, 0x14, 0x00, 0x01, 0x00, 0x00, 0x00, 0xD0, 0x08, 0x00, 0x00, 0x00, 0x96, 0x00, 0x00, 0x03, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x8F, 0x70};
 
 // Airbone < 1g, Auto 2D/3D
+uint8_t const GPS_MSG_GETAIRB[] = {0xB5, 0x62, 0x06, 0x24, 0x00, 0x00, 0x2A, 0x84};
 uint8_t const GPS_MSG_SETAIRB[] = {0xB5, 0x62, 0x06, 0x24, 0x24, 0x00, 0xFF, 0xFF, 0x06, 0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00, 0x05, 0x00, 0xFA, 0x00, 0xFA, 0x00, 0x64, 0x00, 0x2C, 0x01, 0x1C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x32, 0x64};
 
 // Enable GPZDA
 uint8_t const GPS_MSG_SETDATE[] = {0xB5, 0x62, 0x06, 0x01, 0x08, 0x00, 0xF0, 0x08, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x08, 0x60, 0xB5, 0x62, 0x06, 0x01, 0x02, 0x00, 0xF0, 0x08, 0x01, 0x19};
 
-void string_Decode(char* str);
+void string_Decode_NMEA(char* str);
+void string_Decode_UB(char* str);
 void USART6SendChar(const uint8_t c);
 void USART6SendString(const uint8_t* str);
 void USART6SendRaw(const uint8_t* str, uint8_t count);
@@ -33,6 +39,8 @@ static position_message_t GP_temp;
 static position_message_t GA_temp;
 static position_message_t GB_temp;
 static position_message_t GN_temp;*/
+
+static position_ub_message_buffer_t ub_message_buffer;
 
 void position_message_init_struct(position_message_t* msg)
 {
@@ -78,6 +86,9 @@ void Position_Init()
 {
     //RingBuffer Init
     InitRingBuffer(&GPS_USART_RxRingBuffer);
+
+    ub_message_buffer.readpos = 0;
+    ub_message_buffer.writepos = 0;
 
     // Serial Interface Init
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART6, ENABLE);
@@ -175,25 +186,86 @@ RingBufferError_t Position_UART_Capture()
     static char rxString[128];
     static uint8_t rxStringWritePos = 0;
 
+    typedef enum { RX_STATE_UB, RX_STATE_NMEA, RX_STATE_IDLE} rx_state_t;
+    static rx_state_t rx_state = RX_STATE_IDLE;
+
+    static uint16_t ub_remaining_payload = 0;
+
     char tmpchar = '\0';
     if (RingBufferRead(&GPS_USART_RxRingBuffer, &tmpchar) == NO_ERROR)
     {
-        if (tmpchar == '$')
-        {
-            rxStringWritePos = 0;
-        }
-        else if (tmpchar == '*')
-        {
-            rxStringWritePos = 0;
-            // kompletter String empfangen
-            string_Decode(rxString);
-        }
-        else
-        {
-            // einzelnes Datenzeichen Empfangen
-            // anhängen des Zeichens an rxString
-            rxString[rxStringWritePos++ & 127] = tmpchar;
-        }
+    	if (settings.forwardGpsToCommands)
+    	{
+    		commands_send_char(tmpchar);
+    	}
+
+    	if (rx_state == RX_STATE_IDLE)
+    	{
+    		rxStringWritePos = 0;
+    		if (tmpchar == '$')
+    		{
+    			rx_state = RX_STATE_NMEA;
+    		}
+    		else if (tmpchar == 0xB5)
+    		{
+    			rx_state = RX_STATE_UB;
+    			ub_remaining_payload = 0xFFFF;
+    		}
+    	}
+    	else if (rx_state == RX_STATE_NMEA)
+    	{
+    		if (tmpchar == '*')
+			{
+				rxStringWritePos = 0;
+				// kompletter String empfangen
+				string_Decode_NMEA(rxString);
+				rx_state = RX_STATE_IDLE;
+			}
+			else
+			{
+				// einzelnes Datenzeichen Empfangen
+				// anhängen des Zeichens an rxString
+				rxString[rxStringWritePos++ & 127] = tmpchar;
+			}
+    	}
+    	else if (rx_state == RX_STATE_UB)
+    	{
+    		rxString[rxStringWritePos & 127] = tmpchar;
+
+    		switch (rxStringWritePos)
+    		{
+    			case 0:
+    			{
+    				if (tmpchar != 0x62)
+    				{
+    					rx_state = RX_STATE_IDLE;
+    				}
+    			} break;
+    			case 3:
+    			{
+    				// first byte of payload length
+    				ub_remaining_payload = (uint16_t)tmpchar;
+    			} break;
+    			case 4:
+    			{
+    				// second byte of payload length
+    				ub_remaining_payload |= ( ((uint16_t)tmpchar) << 8);
+    			} break;
+    			default:
+    			{
+    				ub_remaining_payload--;
+    				if (ub_remaining_payload == 0)
+    				{
+    					string_Decode_UB(rxString);
+    					rx_state = RX_STATE_IDLE;
+    				}
+    			}
+    		}
+    		rxStringWritePos++;
+    	}
+
+
+
         return NO_ERROR;
     }
     else
@@ -207,7 +279,7 @@ void position_store(char* str, position_message_t* msg)
 
 }
 
-void string_Decode(char* str)
+void string_Decode_NMEA(char* str)
 {
 	position_message_t* Gx_temp;
 
@@ -331,6 +403,49 @@ void string_Decode(char* str)
 	}
 }
 
+void string_Decode_UB(char* str)
+{
+	// check header
+	if ((*str++) != 0x62 )
+		return;
+
+	position_ub_message_t* message = &ub_message_buffer.messages[ub_message_buffer.writepos];
+
+	message->class = *str++;
+	message->id = *str++;
+
+	uint16_t len1 = *str++;
+	uint16_t len2 = *str++;
+	message->lenght = len1 | (len2 << 8);
+
+	/*
+	message->lenght = ((uint16_t)(*str++)) | ( ((uint16_t)(*str++)) << 8);
+	*/
+
+	for (uint8_t i = 0; i < (message->lenght & 127); i++)
+	{
+		message->payload[i] = *str++;
+	}
+	//ub_message_buffer.writepos = (ub_message_buffer.writepos+1) % 5;
+
+	if ( (message->class == 0x06) && (message->id == 0x24) )
+	{
+		// airbone message
+		if (message->payload[2] ==  6)
+		{
+			commands_send_string("Airbone OK\r\n");
+			rf_send_string("\r\n\r\nAirbone OK\r\n\r\n");
+		}
+		else
+		{
+			char buffer[30];
+			snprintf(buffer, sizeof(buffer)-1, "\r\n\r\nAirbone ERR: %u\r\n\r\n", message->payload[2]);
+			commands_send_string(&buffer[4]);
+			rf_send_string(buffer);
+		}
+	}
+}
+
 void Position_Get(position_message_t* msg)
 {
 	uint32_t timeout = 10000;
@@ -339,8 +454,46 @@ void Position_Get(position_message_t* msg)
 		timeout--;
 	}
 
+	//USART6SendRaw(GPS_MSG_GETAIRB, sizeof(GPS_MSG_GETAIRB));
+
 	// Nachricht gültig
 	PositionCopy(msg, &GP_temp);
+}
+
+uint8_t position_in_airbone()
+{
+	USART6SendRaw(GPS_MSG_GETAIRB, sizeof(GPS_MSG_GETAIRB));
+/*
+	uint32_t timeout = 0x7FFFFFFF;
+	while (timeout--)
+	{
+		// get next UB message
+		if (ub_message_buffer.writepos > ub_message_buffer.readpos)
+		{
+			// new message
+			position_ub_message_t* message = &ub_message_buffer.messages[ub_message_buffer.readpos];
+			ub_message_buffer.readpos = (ub_message_buffer.readpos+1) % 5;
+
+			if ( (message->class != 0x06) || (message->id != 0x24) )
+			{
+				// no airbone message
+				continue;
+			}
+			else
+			{
+				// airbone message
+				if (message->payload[2] ==  6)
+					return 1;
+				else
+					return 0;
+			}
+		}
+	}
+
+	// error:
+	return 0;
+*/
+	return 1;
 }
 
 void USART6_IRQHandler()

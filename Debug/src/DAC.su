@@ -1,4 +1,4 @@
 DAC.c:13:6:my_DAC_Init	40	static
 DAC.c:69:6:startSine	80	static
 DAC.c:100:6:stopSine	8	static
-DAC.c:107:6:transmit	0	static
+DAC.c:107:6:transmit	8	static

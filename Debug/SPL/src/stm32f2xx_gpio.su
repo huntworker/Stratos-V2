@@ -1,5 +1,5 @@
 stm32f2xx_gpio.c:125:6:GPIO_DeInit	8	static
-stm32f2xx_gpio.c:187:6:GPIO_Init	28	static
+stm32f2xx_gpio.c:187:6:GPIO_Init	16	static
 stm32f2xx_gpio.c:239:6:GPIO_StructInit	0	static
 stm32f2xx_gpio.c:260:6:GPIO_PinLockConfig	8	static
 stm32f2xx_gpio.c:304:9:GPIO_ReadInputDataBit	0	static

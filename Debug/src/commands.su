@@ -1,0 +1,6 @@
+commands.c:17:6:commands_init	48	static
+commands.c:58:6:commands_send_char	8	static
+commands.c:65:6:commands_send_string	8	static
+commands.c:121:13:commands_string_decode	128	static
+commands.c:74:6:USART1_IRQHandler	8	static
+commands.c:87:19:commands_UART_Capture	32	static

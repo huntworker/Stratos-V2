@@ -1,5 +1,5 @@
 stm32f2xx_i2c.c:137:6:I2C_DeInit	8	static
-stm32f2xx_i2c.c:180:6:I2C_Init	32	static
+stm32f2xx_i2c.c:180:6:I2C_Init	40	static
 stm32f2xx_i2c.c:289:6:I2C_StructInit	0	static
 stm32f2xx_i2c.c:313:6:I2C_Cmd	0	static
 stm32f2xx_i2c.c:337:6:I2C_GenerateSTART	0	static
@@ -12,13 +12,13 @@ stm32f2xx_i2c.c:490:6:I2C_GeneralCallCmd	0	static
 stm32f2xx_i2c.c:516:6:I2C_SoftwareResetCmd	0	static
 stm32f2xx_i2c.c:540:6:I2C_StretchClockCmd	0	static
 stm32f2xx_i2c.c:566:6:I2C_FastModeDutyCycleConfig	0	static
+stm32f2xx_i2c.c:604:6:I2C_NACKPositionConfig	0	static
 stm32f2xx_i2c.c:632:6:I2C_SMBusAlertConfig	0	static
 stm32f2xx_i2c.c:656:6:I2C_ARPCmd	0	static
 stm32f2xx_i2c.c:694:6:I2C_SendData	0	static
 stm32f2xx_i2c.c:707:9:I2C_ReceiveData	0	static
 stm32f2xx_i2c.c:738:6:I2C_TransmitPEC	0	static
 stm32f2xx_i2c.c:769:6:I2C_PECPositionConfig	0	static
-stm32f2xx_i2c.c:604:6:I2C_NACKPositionConfig	0	static
 stm32f2xx_i2c.c:793:6:I2C_CalculatePEC	0	static
 stm32f2xx_i2c.c:815:9:I2C_GetPEC	0	static
 stm32f2xx_i2c.c:848:6:I2C_DMACmd	0	static

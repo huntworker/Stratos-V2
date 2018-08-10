@@ -6,7 +6,7 @@
 //#define HEATING_ACTIVE
 
 
-#include "usart.h"
+#include "commands.h"
 #include "i2c.h"
 #include "MCP9800.h"
 #include "stm32_ub_fatfs.h"
@@ -18,6 +18,7 @@
 #include "stm32f2xx_gpio.h"
 #include "AF.h"
 #include "position.h"
+#include "main.h"
 
 #ifdef RRC_AKKU_ACTIVE
 #include "RRC_Bat.h"
@@ -54,10 +55,15 @@ int SD_add_string(char* str);
 
 static volatile uint32_t timeout = 0;
 
+settings_t settings;
+
 
 int main()
 {
 	//SystemInit();
+
+	settings.plotDataInCommands = 0;
+	settings.forwardGpsToCommands = 0;
 
 
 	char buffer[128];
@@ -69,7 +75,7 @@ int main()
 
 	uint8_t last_reset_by_watchdog = watchdog_init(2000);
 
-	usart_init();
+	commands_init();
 
 	//my_RTC_Init();
 
@@ -108,12 +114,12 @@ int main()
 	RCC_GetClocksFreq(&RCC_Clocks);
 	SysTick_Config(RCC_Clocks.HCLK_Frequency);
 
-	usart_send_char(0);
+	commands_send_char(0);
 
 	if (last_reset_by_watchdog)
     {
         snprintf(buffer, 40, "\r\n!!WATCHDOG CAUSED RESET!!\r\n");
-        usart_send_string(buffer);
+        commands_send_string(buffer);
         rf_send_string(buffer);
     }
 
@@ -147,20 +153,34 @@ int main()
 			"Vbat:mV*"
 			"Date:DD.MM.YYYY,"
 			"HDOP\r\n\r\n"*/;
-    usart_send_string(initstring);
+    commands_send_string(initstring);
     rf_send_string(initstring);
 
+    uint8_t airbone_status_not_send = 1;
+
+    position_in_airbone();
 
 	while(1)
 	{
+		if ( (timeout == 5) && airbone_status_not_send)
+		{
+			position_in_airbone();
+			airbone_status_not_send = 0;
+		}
+
 	    watchdog_trigger();
 
 	    for (uint8_t i = 0; i < 255; i++)
 	    {
-	    	if(Position_UART_Capture() == BUFFER_EMPTY)
+	    	if (Position_UART_Capture() == BUFFER_EMPTY)
 	    		break;
 	    }
 
+	    for (uint8_t i = 0; i < 255; i++)
+		{
+			if (commands_UART_Capture() == BUFFER_EMPTY)
+				break;
+		}
 
         Position_Get(&currentPosition);
 
@@ -299,18 +319,22 @@ int main()
                 	strncat(buffer, lastValidPosition.time, sizeof(buffer)-strlen(buffer));
                 }
 
-                if (SD_add_string(buffer) == 1)
+                strncat(buffer, "\r\n", sizeof(buffer)-strlen(buffer));
+
+                if (SD_add_string(&buffer[4]) == 1)	// write string to SD card without leading \r\n\r\n
                 {
                 	// Fehler beim beschreiben der SD-Karte
                 	strncat(buffer, ",SD_ERR", sizeof(buffer)-strlen(buffer));
                 }
 
-                strncat(buffer, "\r\n\r\n", sizeof(buffer)-strlen(buffer));
-
-                usart_send_string(buffer);
+                if (settings.plotDataInCommands)
+                {
+                	commands_send_string(&buffer[4]); // write string to uart without leading \r\n\r\n
+                }
 
                 if (!(time % 100))
                 {
+                	strncat(buffer, "\r\n", sizeof(buffer)-strlen(buffer)); // might not be needed
                     rf_send_string(buffer);
 
                     timeout = 0;

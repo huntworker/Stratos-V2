@@ -4,7 +4,7 @@ stm32f2xx_rcc.c:298:6:RCC_AdjustHSICalibrationValue	0	static
 stm32f2xx_rcc.c:334:6:RCC_HSICmd	0	static
 stm32f2xx_rcc.c:359:6:RCC_LSEConfig	0	static
 stm32f2xx_rcc.c:399:6:RCC_LSICmd	0	static
-stm32f2xx_rcc.c:442:6:RCC_PLLConfig	8	static
+stm32f2xx_rcc.c:442:6:RCC_PLLConfig	0	static
 stm32f2xx_rcc.c:465:6:RCC_PLLCmd	0	static
 stm32f2xx_rcc.c:492:6:RCC_PLLI2SConfig	0	static
 stm32f2xx_rcc.c:508:6:RCC_PLLI2SCmd	0	static
@@ -16,7 +16,7 @@ stm32f2xx_rcc.c:722:9:RCC_GetSYSCLKSource	0	static
 stm32f2xx_rcc.c:747:6:RCC_HCLKConfig	0	static
 stm32f2xx_rcc.c:779:6:RCC_PCLK1Config	0	static
 stm32f2xx_rcc.c:810:6:RCC_PCLK2Config	0	static
-stm32f2xx_rcc.c:862:6:RCC_GetClocksFreq	8	static
+stm32f2xx_rcc.c:862:6:RCC_GetClocksFreq	4	static
 stm32f2xx_rcc.c:987:6:RCC_RTCCLKConfig	0	static
 stm32f2xx_rcc.c:1019:6:RCC_RTCCLKCmd	0	static
 stm32f2xx_rcc.c:1036:6:RCC_BackupResetCmd	0	static

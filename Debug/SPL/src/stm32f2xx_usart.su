@@ -1,7 +1,7 @@
 stm32f2xx_usart.c:183:6:USART_DeInit	8	static
 stm32f2xx_usart.c:232:6:USART_Init	32	static
 stm32f2xx_usart.c:345:6:USART_StructInit	0	static
-stm32f2xx_usart.c:365:6:USART_ClockInit	8	static
+stm32f2xx_usart.c:365:6:USART_ClockInit	12	static
 stm32f2xx_usart.c:396:6:USART_ClockStructInit	0	static
 stm32f2xx_usart.c:413:6:USART_Cmd	0	static
 stm32f2xx_usart.c:439:6:USART_SetPrescaler	0	static
@@ -22,8 +22,8 @@ stm32f2xx_usart.c:950:6:USART_SmartCardNACKCmd	0	static
 stm32f2xx_usart.c:1021:6:USART_IrDAConfig	0	static
 stm32f2xx_usart.c:1039:6:USART_IrDACmd	0	static
 stm32f2xx_usart.c:1085:6:USART_DMACmd	0	static
-stm32f2xx_usart.c:1213:6:USART_ITConfig	8	static
+stm32f2xx_usart.c:1213:6:USART_ITConfig	4	static
 stm32f2xx_usart.c:1277:12:USART_GetFlagStatus	0	static
 stm32f2xx_usart.c:1326:6:USART_ClearFlag	0	static
-stm32f2xx_usart.c:1360:10:USART_GetITStatus	8	static
+stm32f2xx_usart.c:1360:10:USART_GetITStatus	4	static
 stm32f2xx_usart.c:1434:6:USART_ClearITPendingBit	0	static

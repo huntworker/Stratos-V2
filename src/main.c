@@ -282,7 +282,17 @@ int main()
                 strncat(buffer, ",", sizeof(buffer)-strlen(buffer));
                 strncat(buffer, position_tx_message->satelites, sizeof(buffer)-strlen(buffer));
                 strncat(buffer, ",", sizeof(buffer)-strlen(buffer));
-                strncat(buffer, position_tx_message->valid, sizeof(buffer)-strlen(buffer));
+                //strncat(buffer, position_tx_message->valid, sizeof(buffer)-strlen(buffer));
+                if (position_tx_message->valid[0] == '0')
+                {
+                	// invalid
+                	strncat(buffer, "0", sizeof(buffer)-strlen(buffer));
+                }
+                else
+                {
+                	// valid
+                	strncat(buffer, "1", sizeof(buffer)-strlen(buffer));
+                }
                 strncat(buffer, ",", sizeof(buffer)-strlen(buffer));
                 strncat(buffer, temperature[0], sizeof(buffer)-strlen(buffer));
                 strncat(buffer, ",", sizeof(buffer)-strlen(buffer));
